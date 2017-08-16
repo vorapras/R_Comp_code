@@ -1,0 +1,41 @@
+###########################################
+#Brownian bridge construction##############
+##########################################################
+# First 3 steps of a Brownian bridge construction#########
+#and a plot of the created sample path####################
+##########################################################
+startt<-0; 
+endt<-1; 
+n<-100; 
+intervallength<-endt/n; 
+xs <- seq(startt, endt, by=intervallength);  
+res2 <-xs*0; 
+
+conditionalmean <- function(u,s,t, x, y) (x*(t-s)+y*(s-u))/(t-u)
+conditionalvar <- function(u,s,t) ((s-u)*(t-s))/(t-u)
+ 
+
+res2[1]<-0; 
+res2[length(res2)]<-rnorm(1, mean = 0, sd = sqrt(endt));
+
+res2[51] <- conditionalmean(xs[1],xs[51], xs[101], 0, res2[n+1])+ sqrt(conditionalvar(xs[1],xs[51], xs[101]))* rnorm(1, mean = 0, sd = 1); 
+res2[26] <- conditionalmean(xs[1],xs[26], xs[51], 0, res2[51])+ sqrt(conditionalvar(xs[1],xs[26], xs[51]))* rnorm(1, mean = 0, sd = 1); 
+res2[76] <- conditionalmean(xs[51],xs[76], xs[101], res2[51], res2[101])+ sqrt(conditionalvar(xs[51],xs[76], xs[101]))* rnorm(1, mean = 0, sd = 1); 
+
+
+myyl=min(res2);
+myyu=max(res2);
+
+
+par(mfrow=c(1,1))
+plot(c(xs[1], xs[length(res2)]), c(res2[1], res2[length(res2)]), type="l", xlab="time t", ylab=expression(W[t]), ylim=c(myyl, myyu), lwd=3)
+lines(c(xs[1], xs[51], xs[length(res2)]), c(res2[1], res2[51], res2[length(res2)]), col="red", lwd=2)
+lines(c(xs[1], xs[26], xs[51], xs[76], xs[length(res2)]), c(res2[1], res2[26], res2[51], res2[76], res2[length(res2)]),col="blue", lwd=2 )
+
+
+
+
+
+
+
+

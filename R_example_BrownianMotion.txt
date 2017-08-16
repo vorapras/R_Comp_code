@@ -1,0 +1,28 @@
+######################################################################
+##Simulating X_t = mu t + sigma W_t, W_t BM on time interval [0,1] ###
+######################################################################
+#Parameters:
+mymu<- -0.5; 
+mysigma<-10;
+
+#Time interval:
+startt<-0; 
+endt<-1; 
+
+#Number of steps and stepsize:
+n<-10000; 
+intervallength<-endt/n; 
+
+
+#Vector with time steps:
+xs <- seq(startt, endt, by=intervallength);  
+
+#Standard normally distributed random numbers:
+mynormal1<-rnorm(length(xs)-1, mean = 0, sd = 1);
+
+#Create sample path:
+res1 <- xs*0; 
+for(i in 1:length(mynormal1)) res1[i+1] <- res1[i]+mymu*intervallength+mysigma*sqrt(intervallength)*mynormal1[i];
+
+#Plot the sample path: 
+plot(xs, res1, type="l", xlab="time t", ylab=expression(paste(mu) *t  + paste(sigma,  W[t])))
